@@ -1,0 +1,38 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #161616;
+  font-family: "Golos", sans-serif, Arial, Helvetica;
+}
+
+
+.menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #cccccc;
+  width: 44rem;
+  letter-spacing: 0.01rem;
+}
+
+.menu > p {
+  display: flex;
+  align-items: center;
+}
+
+.menu > p:hover {
+  color: #3778ad;
+  cursor: pointer;
+}
+
+
+.profile {
+  width: 1.1rem;
+}
+
+.arrow {
+  display: flex;
+  width: 1rem;
+}
