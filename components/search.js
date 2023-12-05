@@ -3,16 +3,46 @@ import axios from "axios";
 import styles from "@/styles/Home.module.css";
 import SearchResults from "./result.js";
 
-export default function Search() {
+export default function Search({ onSearchClick }) {
   const [showResult, setShowResult] = useState(false);
   const [result, setResult] = useState([]);
+  const [ERC, setERC] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
+  const [balance, setBalance] = useState("");
+  const [ethValue, setEthValue] = useState("");
+  const [connectWalletMode, setConnectWalletMode] = useState(false);
+  const [connectedWallet, setConnectedWallet] = useState("");
+  const [userInput, setUserInput] = useState("");
+  const [Form, setForm] = useState(false);
   const changeHandler = (e) => {
     setSearchInput(e.target.value);
   };
+
+  const handleConnectWallet = () => {
+    if (connectWalletMode) {
+      // View Wallet button clicked, show result
+      setForm(false);
+      setSearchInput(connectedWallet);
+      handleSearch();
+    } else {
+      // Connect Wallet button clicked, show custom prompt
+      setConnectWalletMode(true);
+      setForm(true);
+    }
+  };
+
+  const handleSaveWallet = () => {
+    setForm(false);
+    setConnectWalletMode(true);
+    setConnectedWallet(userInput);
+  };
+
+  const onCancel = () =>{
+    setForm(false);
+    setConnectWalletMode(false);
+  }
 
   const handleSearch = async () => {
     document.querySelector("#inputField").value = "";
@@ -24,11 +54,27 @@ export default function Search() {
       const response = await axios.get("http://localhost:3001/address", {
         params: { address: searchInput },
       });
+      
+      const ERCresponse = await axios.get("http://localhost:3001/erc20", {
+        params: { address: searchInput },
+      });
 
+      const balanceResponse = await axios.get("http://localhost:3001/balance", {
+        params: { address: searchInput },
+      });
+
+      const ethResponse = await axios.get("http://localhost:3001/ethereum-price", {});
+      
+      setEthValue(ethResponse.data.price);
+      setBalance(balanceResponse.data.getBalance);
       setResult(response.data.result);
+      setERC(ERCresponse.data.result);
       setShowResult(true);
+
+      // Invoke the onSearchClick prop to signal that search is active
+      onSearchClick();
     } catch (error) {
-      setError("An error occurred while fetching data.");
+      alert("An error occurred while fetching data.");
     } finally {
       setLoading(false);
     }
@@ -36,22 +82,22 @@ export default function Search() {
 
   return (
     <section className="w-full">
-    <section className= {styles.searchHeader}> 
+      <section className={styles.searchHeader}>
         <section className="w-1/2">
-          <h3 className="text-2xl text-white">The Ethereum Blockchain Explorer</h3>
-          <section className="flex items-center w-full border border-gray-800 rounded-md bg-gray-900">
-          <input
-            className = {styles.inputField}
-            type="text"
-            id="inputField"
-            name="inputField"
-            maxLength="1200"
-            placeholder="Search by Address / Txn Hash / Block / Token / Domain Name"
-            required
-            onChange={changeHandler}
+          <h3 className="text-2xl text-white mb-5">The Ethereum Blockchain Explorer</h3>
+          <section className="flex items-center w-full border border-gray-800 rounded-md mb-8">
+            <input
+              className={styles.inputField}
+              type="text"
+              id="inputField"
+              name="inputField"
+              maxLength="1200"
+              placeholder="Search by Address / Txn Hash / Block / Token / Domain Name"
+              required
+              onChange={changeHandler}
             />
             <button
-            className={styles.btn}
+              className={styles.btn}
               onClick={handleSearch}
             >
               <svg
@@ -68,11 +114,47 @@ export default function Search() {
               </svg>
             </button>
           </section>
+          <button
+              className="bg-black text-blue-300 rounded px-4 py-2"
+              onClick={handleConnectWallet}
+            >
+              {connectWalletMode ? "View Wallet" : "Connect Wallet"}
+            </button>
+
+            { Form && (
+              <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+      <div className="bg-white p-8 rounded-md w-96">
+        <label className="block mb-2 text-gray-700">
+          Please enter your Ethereum address:
+        </label>
+        <input
+          type="text"
+          pattern="^[0-9a-fA-F]+$"  // Accepts only hexadecimal characters
+          title="Please enter a valid hexadecimal Ethereum address"
+          value={userInput}
+          onChange={(e) => setUserInput(e.target.value)}
+          className="w-full px-3 py-2 border rounded-md mb-4"
+        />
+        <button
+          onClick={handleSaveWallet}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+        >
+          Save
+        </button>
+        <button
+          onClick={onCancel}
+          className="bg-red-500 text-white px-4 py-2 rounded-md ml-2"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+      )}
         </section>
       </section>
       {loading && <p className="text-white">Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
-      {showResult && <SearchResults result={{ result, searchInput }} />}
+      {showResult && <SearchResults result={{ result, ERC, searchInput, balance, ethValue }} />}
     </section>
   );
 }

@@ -1,8 +1,17 @@
+import { useState } from "react";
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import Header from "../components/header.js";
 import Search from "@/components/search.js";
+import HeroSection from "../components/main.js";
+
 export default function Home() {
+  const [searchActive, setSearchActive] = useState(false);
+
+  const handleSearchClick = () => {
+    setSearchActive(true);
+  };
+
   return (
     <>
       <Head>
@@ -12,8 +21,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <section className={styles.main}>
-      <Header/>
-      <Search />
+        <Header />
+        <Search onSearchClick={handleSearchClick} />
+        {searchActive ? null : <HeroSection/>}
       </section>
     </>
   );
