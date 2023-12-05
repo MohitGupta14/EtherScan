@@ -7,7 +7,6 @@
   font-family: "Golos", sans-serif, Arial, Helvetica;
 }
 
-
 .menu {
   display: flex;
   align-items: center;
@@ -27,7 +26,6 @@
   cursor: pointer;
 }
 
-
 .profile {
   width: 1.1rem;
 }
@@ -35,4 +33,54 @@
 .arrow {
   display: flex;
   width: 1rem;
+}
+
+
+.searchHeader {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.506);
+  background-image: url("https://etherscan.io/images/svg/waves-light.svg");
+  height: 17rem;
+  padding: 0 11.5rem;
+  padding-top: 3rem;
+}
+
+
+.input_section {
+  display: flex;
+  align-items: center;
+  width: 50.5rem;
+  height: 3rem;
+  border: 1px solid #191919;
+  border-radius: 0.3rem;
+  background-color: #111111;
+}
+
+.inputField {
+  width: 48rem;
+  color: #ffffff;
+  height: 2rem;
+  padding-left: 2rem;
+  border: none;
+  background-color: #111111;
+  font-size: 1rem;
+}
+
+.inputField::placeholder {
+  color: #bbbbbb;
+  font-size: 1rem;
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.2rem;
+  background-color: #3a82be;
+  border: none;
+  outline: none;
+  border-radius: 0.3rem;
+  cursor: pointer;
 }
