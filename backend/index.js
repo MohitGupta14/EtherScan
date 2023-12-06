@@ -180,7 +180,7 @@ app.get('/latestBlocks', async (req, res) => {
         blockHeight: i,
         timestamp: timestamp,
         timeAgo: timeAgo,
-        txnHash: blockData.transactions[0], // You can choose which transaction hash to include
+        txnHash: blockData.transactions[0],
       });
     }
 
@@ -191,45 +191,54 @@ app.get('/latestBlocks', async (req, res) => {
   }
 });
 
-app.get('/latestTransactions', async (req, res) => {
+app.get('/latestBlocksTrans', async (req, res) => {
   try {
-    // Fetch recent transactions using the eth_getLogs endpoint
+    // Get the latest block number
     const apiUrl = 'https://api.etherscan.io/api';
     const apiKey = 'G3UWE3PSHIHTRVKSX6SYXEKXG4TIPFGPZ8';
-    const logsResponse = await axios.get(apiUrl, {
+
+    const latestBlockResponse = await axios.get(apiUrl, {
       params: {
-        module: 'logs',
-        action: 'getLogs',
-        fromBlock: 'latest',
-        toBlock: 'latest',
-        sort: 'desc',
+        module: 'proxy',
+        action: 'eth_blockNumber',
         apiKey: apiKey,
       },
     });
-
-    const transactions = [];
-    const logEntries = logsResponse.data.result || [];
-    // Process each log entry
-    logEntries.forEach((log) => {
-      const timestamp = parseInt(log.timeStamp);
-      const timeAgo = Math.floor((Date.now() / 1000 - timestamp) / 60); // Time in minutes
-
-      transactions.push({
-        timestamp: timestamp,
-        timeAgo: timeAgo,
-        txnHash: log.transactionHash,
-      });
+    
+    const latestBlockNumber = parseInt(latestBlockResponse.data.result, 16);
+ 
+    const block1Response = await axios.get(apiUrl, {
+      params: {
+        module: 'proxy',
+        action: 'eth_getBlockByNumber',
+        tag: `${latestBlockNumber.toString(16)}`,
+        apiKey: apiKey,
+        boolean: true,
+      },
     });
 
-    res.json({ latestTransactions: transactions });
+    const blockData1 = [];
+    blockData1.push(block1Response.data.result.transactions);
+    const timestamp = parseInt(block1Response.data.result.timestamp, 16) * 1000; // Convert to milliseconds
+    const timeAgo = Math.floor((Date.now() - timestamp) / 1000); // Time in seconds
+    const transactions = [];
+    
+    for (let i = 0; i < 6; i++) {
+      const transactionObject = {
+        hash: blockData1[0][i].hash,
+        from: blockData1[0][i].from,
+        to: blockData1[0][i].to,
+        value : blockData1[0][i].value,
+        time: timeAgo
+      };
+      transactions.push(transactionObject);
+    }
+    res.json({ success: true, transactions });
   } catch (error) {
-    console.error('Error fetching latest transactions:', error.message);
+    console.error('Error:', error.message);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-
-
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

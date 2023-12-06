@@ -52,13 +52,13 @@ export default function Header() {
         <div className="flex items-center">
           ETH Price:{" "}
           <span className="ml-1" style={{ color: "#7cb3d7" }}>
-            {ethPrice}
+            {'$'+ ethPrice}
           </span>
         </div>
         <div className="flex items-center ml-4">
           Gas Price:{" "}
           <span className="ml-1" style={{ color: "#7cb3d7" }}>
-            {gasPrice}
+            {gasPrice + " Gwei"} 
           </span>
         </div>
       </section>

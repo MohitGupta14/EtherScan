@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import axios from "axios";
-import moment from "moment";
 import styles from "@/styles/Home.module.css";
 import {
   faCube,
@@ -16,7 +15,8 @@ import Chart from "../public/assets/chart.png";
 
 function formatNumberToMillions(number) {
     const Wei = 1000000000000000000;
-    return (number / Wei).to + " Wei";
+    console.log(number);
+    return (number / Wei) + " Wei";
     
 }
 
@@ -46,16 +46,24 @@ export default function HeroSection() {
     const getLatestBlockInfo = async () =>{
       try {
         const response = await axios.get("http://localhost:3001/latestBlocks");
-        console.log(response.data.latestBlocks);
         setBlockResult(response.data.latestBlocks);
       } catch (error) {
         console.error("Error fetching block Information:", error);
       }
     };
-    
+    const getTransactionInfo = async () =>{
+      try {
+        const response = await axios.get("http://localhost:3001/latestBlocksTrans");
+        console.log(response.data);
+        setTransactionsResult(response.data.transactions)
+      } catch (error) {
+        console.error("Error fetching block Information:", error);
+      }
+    }
     getEthPrice();
     getTotalTransactions();
     getLatestBlockInfo();
+    getTransactionInfo();
   }, []);
 
   return (
@@ -118,7 +126,7 @@ export default function HeroSection() {
                 </section>
                 <section className={styles.hero_box}>
                   <p>MARKET CAP</p>
-                  <p className={styles.heroValues}>$196,968,104,207.00</p>
+                  <p className={styles.heroValues}>$272,629,315,291.00</p>
                 </section>
               </section>
             </section>
@@ -131,7 +139,7 @@ export default function HeroSection() {
                   />
                 </section>
                 <section className={styles.hero_box}>
-                  <p>TRANSACTIONS</p>
+                  <p>TOTAL TOKENS</p>
                   <p className={styles.heroValues}>{totalTransactions}</p>
                 </section>
               </section>
@@ -192,7 +200,7 @@ export default function HeroSection() {
                           <section>
                           </section>
                         </td>
-                        <td className={styles.tdValue}>{block.txnHash.gas} Eth</td>
+                        <td className={styles.tdValue}>{(Number(block.txnHash.value) / 10 ** 18).toFixed(4)} Eth</td>
                       </tr>
                     );
                   })}
@@ -212,7 +220,7 @@ export default function HeroSection() {
                           transactionsResult.indexOf(txn) ==
                             transactionsResult.length - 1 && styles.lastTd
                         }`}
-                        key={txn.transactionHash}
+                        key={txn.hash}
                       >
                         <td className={styles.tdContract}>
                           <FontAwesomeIcon
@@ -222,25 +230,25 @@ export default function HeroSection() {
                         </td>
                         <td className={styles.tdBlock}>
                           <section className={styles.blueText}>
-                            {txn.transactionHash?.slice(0, 14)}...
+                            {txn.hash?.slice(0, 14)}...
                           </section>
                           <section>
-                            {moment(txn.time, "YYYYMMDD").fromNow()}
+                            {txn.time + " sec ago" }
                           </section>
                         </td>
                         <td className={styles.tdFromTo}>
                           <section>
                             From{" "}
                             <span className={styles.blueText}>
-                              {txn.fromAddress?.slice(0, 6)}...
-                              {txn.fromAddress?.slice(36)}
+                              {txn.from?.slice(0, 6)}...
+                              {txn.to?.slice(36)}
                             </span>
                           </section>
                           <section>
                             To{" "}
                             <span className={styles.blueText}>
-                              {txn.toAddress?.slice(0, 6)}...
-                              {txn.toAddress?.slice(36)}
+                              {txn.to?.slice(0, 6)}...
+                              {txn.to?.slice(36)}
                             </span>
                             <span className={styles.blueText}>
                               {txn.totalTransactions}
