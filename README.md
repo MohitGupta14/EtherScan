@@ -50,3 +50,9 @@ We welcome contributions to enhance and improve the project. Feel free to submit
 
 
 Happy coding!
+
+![image](https://github.com/MohitGupta14/EtherScan/assets/81846020/be14dec0-5422-47ae-ab41-d58f907eba9b)
+
+![image](https://github.com/MohitGupta14/EtherScan/assets/81846020/1bc8111c-7ed0-4735-abb9-518e23547e91)
+
+
