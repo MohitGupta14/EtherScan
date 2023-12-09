@@ -27,41 +27,41 @@ const SearchResults = (props) => {
   return(
     <section>
       {/* Rectangular box above the table */}
-      <div className="flex justify-between mx-4">
+      <section className="flex justify-between mx-4">
   <section className="bg-black p-8 w-[35%] rounded-lg mb-4 shadow-md">
     <h3 className="text-white text-lg font-bold mb-4">Overview</h3>
-    <div className="text-gray-300">
+    <section className="text-gray-300">
       <span className="block mb-3">Eth Balance</span>
       <span className="text-blue-300">
       Ξ {(props.result.balance / 1e18)} ETH
       </span>
-    </div>
-    <div className="text-gray-300 mt-3">
+    </section>
+    <section className="text-gray-300 mt-3">
       <span className="block mb-3">Eth Value</span>
       <span className="text-blue-300">
       ${((props.result.balance / 1e18) * props.result.ethValue).toFixed(2)} (@ {props.result.ethValue}/ETH)
       </span>
-    </div>
+    </section>
   </section>
 
   <section className="bg-black p-8 w-[30%] rounded-lg mb-4 shadow-md">
     <h3 className="text-white text-lg font-bold mb-4">More info</h3>
-    <div className="text-gray-300">
+    <section className="text-gray-300">
       <span className="block mb-3">LAST TXN SENT</span>
       <span className=" text-blue-300">
       {props.result.result[0].hash.slice(0, 16)}... (from {moment.unix(props.result.result[0].timeStamp).fromNow()})
       </span>
-    </div>
+    </section>
   </section>
 
   <section className="bg-black p-8 w-[30%] rounded-lg mb-4 shadow-md">
     <h3 className="text-white text-lg font-bold mb-4">Multi chain</h3>
-    <div className="text-gray-300">
+    <section className="text-gray-300">
       <span className="block mb-3">Multi Chain address</span>
       <span className="text-blue-300">------------</span>
-    </div>
+    </section>
   </section>
-</div>
+</section>
       <button
         className="bg-blue-400 text-black py-1 px-2 rounded-lg mt-4 ml-4"
         onClick={handleShowTable}

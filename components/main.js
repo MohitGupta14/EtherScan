@@ -15,9 +15,7 @@ import Chart from "../public/assets/chart.png";
 
 function formatNumberToMillions(number) {
     const Wei = 1000000000000000000;
-    console.log(number);
     return (number / Wei) + " Wei";
-    
 }
 
 export default function HeroSection() {
@@ -27,16 +25,18 @@ export default function HeroSection() {
   const [blockResult, setBlockResult] = useState([]);
   const [transactionsResult, setTransactionsResult] = useState([]);
   const [latestBlock, setLatestBlock] = useState("");
+  const [domLoaded, setDomLoaded] = useState(false);
 
   useEffect(() => {
     const getEthPrice = async () => {
-      const response = await axios.get(`http://localhost:3001/ethereum-price`, {});
+      setDomLoaded(true);
+      const response = await axios.get(`http://localhost:3000/api/ethereum-price`, {});
       setEthPrice(response.data.price);
     };
 
     const getTotalTransactions = async () => {
         try {
-          const response = await axios.get("http://localhost:3001/totalTransactionsCount");
+          const response = await axios.get("http://localhost:3000/api/totalTransactionsCount");
           const formattedTotalTransactions = formatNumberToMillions(response.data.totalTransactionsCount);
           setTotalTransactions(formattedTotalTransactions);
         } catch (error) {
@@ -45,7 +45,7 @@ export default function HeroSection() {
     };
     const getLatestBlockInfo = async () =>{
       try {
-        const response = await axios.get("http://localhost:3001/latestBlocks");
+        const response = await axios.get("http://localhost:3000/api/latestBlocks");
         setBlockResult(response.data.latestBlocks);
       } catch (error) {
         console.error("Error fetching block Information:", error);
@@ -53,8 +53,7 @@ export default function HeroSection() {
     };
     const getTransactionInfo = async () =>{
       try {
-        const response = await axios.get("http://localhost:3001/latestBlocksTrans");
-        console.log(response.data);
+        const response = await axios.get("http://localhost:3000/api/latestBlocksTrans");
         setTransactionsResult(response.data.transactions)
       } catch (error) {
         console.error("Error fetching block Information:", error);

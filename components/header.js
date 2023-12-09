@@ -40,8 +40,8 @@ export default function Header() {
       }
     }
 
-    fetchData("http://localhost:3001/ethereum-price", setEthPrice);
-    fetchData("http://localhost:3001/ethGasPrice", setGasPrice);
+    fetchData("http://localhost:3000/api/ethereum-price", setEthPrice);
+    fetchData("http://localhost:3000/api/ethGasPrice", setGasPrice);
 
     return () => {};
   }, []);
@@ -49,18 +49,18 @@ export default function Header() {
   return (
     <section className="w-full bg-black">
       <section className="flex items-center text-gray-500 h-12 text-xs px-4 border-b border-gray-800">
-        <div className="flex items-center">
+        <section className="flex items-center">
           ETH Price:{" "}
           <span className="ml-1" style={{ color: "#7cb3d7" }}>
             {'$'+ ethPrice}
           </span>
-        </div>
-        <div className="flex items-center ml-4">
+        </section>
+        <section className="flex items-center ml-4">
           Gas Price:{" "}
           <span className="ml-1" style={{ color: "#7cb3d7" }}>
             {gasPrice + " Gwei"} 
           </span>
-        </div>
+        </section>
       </section>
 
       <section className="flex items-center justify-between h-14 px-4 border-b border-gray-800">
