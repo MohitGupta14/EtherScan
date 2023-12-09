@@ -4,28 +4,12 @@ Welcome to the Etherscan Clone project! This project aims to replicate the funct
 
 ## Initial Setup
 
-### Backend
-
-1. Navigate to the `backend` directory:
-   ```bash
-   cd backend
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Start the backend server:
-   ```bash
-   npm start
-   ```
 
 ### Frontend
 
 1. Move back to the project root directory:
    ```bash
-   cd ..
+   cd EtherScan
    ```
 
 2. Install frontend dependencies:
