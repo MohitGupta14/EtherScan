@@ -30,7 +30,7 @@ export default function HeroSection() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const ethPriceResponse = await axios.get("http://localhost:3000/api/ethereum-price");
+        const ethPriceResponse = await axios.get("/api/ethereum-price");
         const ethPrice = ethPriceResponse.data.price;
         setEthPrice(ethPrice);
       } catch (error) {
@@ -44,7 +44,7 @@ export default function HeroSection() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const totalTransactionsResponse = await axios.get("http://localhost:3000/api/totalTransactionsCount");
+        const totalTransactionsResponse = await axios.get("/api/totalTransactionsCount");
         const formattedTotalTransactions = formatNumberToMillions(totalTransactionsResponse.data.totalTransactionsCount);
         setTotalTransactions(formattedTotalTransactions);
       } catch (error) {
@@ -64,7 +64,7 @@ export default function HeroSection() {
           setBlockResult(JSON.parse(cachedBlockResult));
           return;
         }
-        const latestBlocksResponse = await axios.get("http://localhost:3000/api/latestBlocks");
+        const latestBlocksResponse = await axios.get("/api/latestBlocks");
         const blockResult = latestBlocksResponse.data.latestBlocks;
         setBlockResult(blockResult);
 
@@ -87,7 +87,7 @@ export default function HeroSection() {
           return;
         }
 
-        const latestBlocksTransResponse = await axios.get("http://localhost:3000/api/latestBlocksTrans");
+        const latestBlocksTransResponse = await axios.get("/api/latestBlocksTrans");
         const transactionsResult = latestBlocksTransResponse.data.transactions;
         setTransactionsResult(transactionsResult);
 

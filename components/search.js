@@ -26,19 +26,19 @@ export default function Search({ onSearchClick }) {
       setLoading(true);
       setError(null);
 
-      const response = await axios.get("http://localhost:3000/api/address", {
+      const response = await axios.get("/api/address", {
         params: { address: searchInput },
       });
       
-      const ERCresponse = await axios.get("http://localhost:3000/api/erc20", {
+      const ERCresponse = await axios.get("/api/erc20", {
         params: { address: searchInput },
       });
 
-      const balanceResponse = await axios.get("http://localhost:3000/api/balance", {
+      const balanceResponse = await axios.get("/api/balance", {
         params: { address: searchInput },
       });
 
-      const ethResponse = await axios.get("http://localhost:3000/api/ethereum-price", {});
+      const ethResponse = await axios.get("/api/ethereum-price", {});
       
       setEthValue(ethResponse.data.price);
       setBalance(balanceResponse.data.getBalance);

@@ -44,8 +44,8 @@ export default function Header() {
       }
     }
 
-    fetchData("http://localhost:3000/api/ethereum-price", setEthPrice);
-    fetchData("http://localhost:3000/api/ethGasPrice", setGasPrice);
+    fetchData("/api/ethereum-price", setEthPrice);
+    fetchData("/api/ethGasPrice", setGasPrice);
     
     return () => {};
 }, []);
