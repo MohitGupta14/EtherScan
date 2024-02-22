@@ -1,4 +1,4 @@
-
+import React from 'react';
 import { Web3Modal } from '../pages/api/Web3Modal'
 import { useState } from 'react';
 

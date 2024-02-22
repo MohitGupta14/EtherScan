@@ -1,12 +1,11 @@
-// pages/api/latestBlocksTrans.js
 import axios from 'axios';
 
 export default async function handler(req, res) {
   try {
-    // Get the latest block number
     const apiUrl = 'https://api.etherscan.io/api';
     const apiKey = 'G3UWE3PSHIHTRVKSX6SYXEKXG4TIPFGPZ8';
 
+    // Get the latest block number
     const latestBlockResponse = await axios.get(apiUrl, {
       params: {
         module: 'proxy',
@@ -16,7 +15,8 @@ export default async function handler(req, res) {
     });
     
     const latestBlockNumber = parseInt(latestBlockResponse.data.result, 16);
- 
+    
+    // Get the latest block details
     const block1Response = await axios.get(apiUrl, {
       params: {
         module: 'proxy',
@@ -27,25 +27,26 @@ export default async function handler(req, res) {
       },
     });
 
-    const blockData1 = [];
-    blockData1.push(block1Response.data.result.transactions);
-    const timestamp = parseInt(block1Response.data.result.timestamp, 16) * 1000; // Convert to milliseconds
-    const timeAgo = Math.floor((Date.now() - timestamp) / 1000); // Time in seconds
+    const blockData = block1Response.data.result;
     const transactions = [];
-    
-    for (let i = 0; i < 6; i++) {
-      const transactionObject = {
-        hash: blockData1[0][i].hash,
-        from: blockData1[0][i].from,
-        to: blockData1[0][i].to,
-        value : blockData1[0][i].value,
+
+    for (let i = 0; i < Math.min(blockData.transactions.length, 6); i++) {
+      const transaction = blockData.transactions[i];
+      const timestamp = parseInt(blockData.timestamp, 16) * 1000; // Convert to milliseconds
+      const timeAgo = Math.floor((Date.now() - timestamp) / 1000); // Time in seconds
+
+      transactions.push({
+        hash: transaction.hash,
+        from: transaction.from,
+        to: transaction.to,
+        value: transaction.value,
         time: timeAgo
-      };
-      transactions.push(transactionObject);
+      });
     }
+
     res.json({ success: true, transactions });
   } catch (error) {
-    console.error('Error:', error.message);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error fetching latest block details:', error.message);
+    res.status(500).json({ error: error });
   }
 }

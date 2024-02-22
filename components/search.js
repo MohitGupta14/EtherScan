@@ -1,8 +1,11 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import { useState } from "react";
 import axios from "axios";
 import styles from "@/styles/Home.module.css";
 import SearchResults from "./result.js";
 import RootLayout from "./layout.js";
+
 export default function Search({ onSearchClick }) {
   const [showResult, setShowResult] = useState(false);
   const [result, setResult] = useState([]);
@@ -97,3 +100,7 @@ export default function Search({ onSearchClick }) {
     </section>
   );
 }
+
+Search.propTypes = {
+  onSearchClick: PropTypes.func.isRequired,
+};

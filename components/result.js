@@ -1,12 +1,13 @@
 import moment from "moment";
+import PropTypes from 'prop-types'; // Import PropTypes
 import React, { useState } from "react";
 
-const SearchResults = (props) => {
-  // Check if props.result is an array before using map
+const SearchResults = ({result}) => {
+
   const [showTable, setShowTable] = useState(true);
   const [showSecondTable, setShowSecondTable] = useState(false);
 
-  if (!Array.isArray(props.result.result)) {
+  if (!Array.isArray(result?.result)) {
     return (
       <section className="bg-gray-900 p-4 rounded">
         <p className="text-red-500">Invalid data format</p>
@@ -33,13 +34,13 @@ const SearchResults = (props) => {
     <section className="text-gray-300">
       <span className="block mb-3">Eth Balance</span>
       <span className="text-blue-300">
-      Ξ {(props.result.balance / 1e18)} ETH
+      Ξ {(result?.balance / 1e18)} ETH
       </span>
     </section>
     <section className="text-gray-300 mt-3">
       <span className="block mb-3">Eth Value</span>
       <span className="text-blue-300">
-      ${((props.result.balance / 1e18) * props.result.ethValue).toFixed(2)} (@ {props.result.ethValue}/ETH)
+      ${((result?.balance / 1e18) * result?.ethValue).toFixed(2)} (@ {result?.ethValue}/ETH)
       </span>
     </section>
   </section>
@@ -49,7 +50,7 @@ const SearchResults = (props) => {
     <section className="text-gray-300">
       <span className="block mb-3">LAST TXN SENT</span>
       <span className=" text-blue-300">
-      {props.result.result[0].hash.slice(0, 16)}... (from {moment.unix(props.result.result[0].timeStamp).fromNow()})
+      {result?.result[0]?.hash?.slice(0, 16)}... (from {moment.unix(result?.result[0]?.timeStamp).fromNow()})
       </span>
     </section>
   </section>
@@ -98,25 +99,25 @@ const SearchResults = (props) => {
             </tr>
           </thead>
           <tbody>
-            {props.result.result.map((txn) => (
-              <tr key={txn.hash} className="text-white border-b border-gray-800">
-                <td className="py-2 px-4 text-blue-300">{txn.hash.slice(0, 16)}...</td>
+            {result?.result.map((txn) => (
+              <tr key={txn?.hash} className="text-white border-b border-gray-800">
+                <td className="py-2 px-4 text-blue-300">{txn?.hash?.slice(0, 16)}...</td>
                 <td>
                   <span className="text-gray-300">
-                    {txn.methodId ? txn.methodId : "Unknown"}
+                    {txn?.methodId ? txn?.methodId : "Unknown"}
                   </span>
                 </td>
-                <td className="py-2 px-4 text-blue-300">{txn.blockNumber}</td>
-                <td>{moment.unix(txn.timeStamp).fromNow()}</td>
+                <td className="py-2 px-4 text-blue-300">{txn?.blockNumber}</td>
+                <td>{moment.unix(txn?.timeStamp).fromNow()}</td>
                 <td>
-                  {`${txn.from.slice(0, 8)}...${txn.from.slice(-8)}`}
+                  {`${txn.from.slice(0, 8)}...${txn?.from.slice(-8)}`}
                 </td>
                 <td></td>
                 <td className="py-2 px-4 text-blue-300">
-                  {`${txn.to.slice(0, 8)}...${txn.to.slice(-8)}`}
+                  {`${txn?.to?.slice(0, 8)}...${txn.to.slice(-8)}`}
                 </td>
-                <td>{(txn.value / 10 ** 18).toFixed(5)} ETH</td>
-                <td>{(txn.gasPrice / 10 ** 18).toFixed(12)}</td>
+                <td>{(txn?.value / 10 ** 18).toFixed(5)} ETH</td>
+                <td>{(txn?.gasPrice / 10 ** 18).toFixed(12)}</td>
               </tr>
             ))}
           </tbody>
@@ -142,20 +143,20 @@ const SearchResults = (props) => {
             </tr>
           </thead>
           <tbody>
-            {props.result.ERC.map((txn) => (
+            {result.ERC.map((txn) => (
               <tr key={txn.hash} className="text-white border-b border-gray-800">
-                <td className="py-2 px-4 text-blue-300">{txn.hash.slice(0, 16)}...</td>
+                <td className="py-2 px-4 text-blue-300">{txn?.hash?.slice(0, 16)}...</td>
             
-                <td>{moment.unix(txn.timeStamp).fromNow()}</td>
+                <td>{moment.unix(txn?.timeStamp).fromNow()}</td>
                 <td>
-                  {`${txn.from.slice(0, 8)}...${txn.from.slice(-8)}`}
+                  {`${txn?.from?.slice(0, 8)}...${txn.from.slice(-8)}`}
                 </td>
                 <td></td>
                 <td className="py-2 px-4 text-blue-300">
-                  {`${txn.to.slice(0, 8)}...${txn.to.slice(-8)}`}
+                  {`${txn?.to?.slice(0, 8)}...${txn.to.slice(-8)}`}
                 </td>
-                <td>{(txn.value / 10 ** 18).toFixed(5)} ETH</td>
-                <td>{txn.tokenName}</td>
+                <td>{(txn?.value / 10 ** 18).toFixed(5)} ETH</td>
+                <td>{txn?.tokenName}</td>
               </tr>
             ))}
           </tbody>
@@ -165,4 +166,12 @@ const SearchResults = (props) => {
   );
 };
 
+SearchResults.propTypes = {
+  result: PropTypes.shape({
+    result: PropTypes.array,
+    balance: PropTypes.number,
+    ethValue: PropTypes.number,
+    ERC: PropTypes.array
+  })
+};
 export default SearchResults;

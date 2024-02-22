@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import axios from "axios";
@@ -21,53 +22,89 @@ function formatNumberToMillions(number) {
 export default function HeroSection() {
   const [ethPrice, setEthPrice] = useState("");
   const [totalTransactions, setTotalTransactions] = useState("");
-  const [showResult, setShowResult] = useState(true);
+  // const [showResult, setShowResult] = useState(true);
   const [blockResult, setBlockResult] = useState([]);
   const [transactionsResult, setTransactionsResult] = useState([]);
-  const [latestBlock, setLatestBlock] = useState("");
-  const [domLoaded, setDomLoaded] = useState(false);
+  let latestBlock = "";
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const ethPriceResponse = await axios.get("http://localhost:3000/api/ethereum-price");
+        const ethPrice = ethPriceResponse.data.price;
+        setEthPrice(ethPrice);
+      } catch (error) {
+        console.error("Error fetching Ethereum price:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
-    const getEthPrice = async () => {
-      setDomLoaded(true);
-      const response = await axios.get(`http://localhost:3000/api/ethereum-price`, {});
-      setEthPrice(response.data.price);
+    const fetchData = async () => {
+      try {
+        const totalTransactionsResponse = await axios.get("http://localhost:3000/api/totalTransactionsCount");
+        const formattedTotalTransactions = formatNumberToMillions(totalTransactionsResponse.data.totalTransactionsCount);
+        setTotalTransactions(formattedTotalTransactions);
+      } catch (error) {
+        console.error("Error fetching total transactions count:", error);
+      }
     };
 
-    const getTotalTransactions = async () => {
-        try {
-          const response = await axios.get("http://localhost:3000/api/totalTransactionsCount");
-          const formattedTotalTransactions = formatNumberToMillions(response.data.totalTransactionsCount);
-          setTotalTransactions(formattedTotalTransactions);
-        } catch (error) {
-          console.error("Error fetching total transactions count:", error);
-        }
-    };
-    const getLatestBlockInfo = async () =>{
-      try {
-        const response = await axios.get("http://localhost:3000/api/latestBlocks");
-        setBlockResult(response.data.latestBlocks);
-      } catch (error) {
-        console.error("Error fetching block Information:", error);
-      }
-    };
-    const getTransactionInfo = async () =>{
-      try {
-        const response = await axios.get("http://localhost:3000/api/latestBlocksTrans");
-        setTransactionsResult(response.data.transactions)
-      } catch (error) {
-        console.error("Error fetching block Information:", error);
-      }
-    }
-    getEthPrice();
-    getTotalTransactions();
-    getLatestBlockInfo();
-    getTransactionInfo();
+    fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+
+        const cachedBlockResult = localStorage.getItem('cachedBlockResult');
+        if (cachedBlockResult) {
+          setBlockResult(JSON.parse(cachedBlockResult));
+          return;
+        }
+        const latestBlocksResponse = await axios.get("http://localhost:3000/api/latestBlocks");
+        const blockResult = latestBlocksResponse.data.latestBlocks;
+        setBlockResult(blockResult);
+
+        localStorage.setItem('cachedBlockResult', JSON.stringify(blockResult));
+      } catch (error) {
+        console.error("Error fetching latest blocks:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const cachedTransactionsResult = localStorage.getItem('cachedTransactionsResult');
+        if (cachedTransactionsResult) {
+          setTransactionsResult(JSON.parse(cachedTransactionsResult));
+          return;
+        }
+
+        const latestBlocksTransResponse = await axios.get("http://localhost:3000/api/latestBlocksTrans");
+        const transactionsResult = latestBlocksTransResponse.data.transactions;
+        setTransactionsResult(transactionsResult);
+
+        localStorage.setItem('cachedTransactionsResult', JSON.stringify(transactionsResult));
+      } catch (error) {
+        console.error("Error fetching latest block transactions:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
 
   return (
     <section className={styles.heroSectionContainer}>
-      {showResult && (
+      {(
         <section>
           <section className={styles.latestResults_header}>
             <section>

@@ -1,30 +1,30 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
-import styles from "@/styles/Home.module.css";
 import Logo from "../public/assets/logo.png";
+import React from 'react';
 
-const MenuItem = ({ label, icon }) => (
-  <p>
-    {label}
-    <span className={styles.arrow}>
-      {icon && (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          className="w-6 h-6"
-        >
-          <path
-            fillRule="evenodd"
-            d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z"
-            clipRule="evenodd"
-          />
-        </svg>
-      )}
-    </span>
-  </p>
-);
+// const MenuItem = ({ label, icon }) => (
+//   <p>
+//     {label}
+//     <span className={styles.arrow}>
+//       {icon && (
+//         <svg
+//           xmlns="http://www.w3.org/2000/svg"
+//           viewBox="0 0 24 24"
+//           fill="currentColor"
+//           className="w-6 h-6"
+//         >
+//           <path
+//             fillRule="evenodd"
+//             d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z"
+//             clipRule="evenodd"
+//           />
+//         </svg>
+//       )}
+//     </span>
+//   </p>
+// );
 
 export default function Header() {
   const [ethPrice, setEthPrice] = useState("");
@@ -33,18 +33,23 @@ export default function Header() {
   useEffect(() => {
     async function fetchData(url, setter) {
       try {
-        const response = await axios.get(url, {});
-        setter(parseInt(response.data.price) || parseInt(response.data.gasPrice) || "");
+        const response = await axios.get(url);
+        if(response.data && (response.data.price || response.data.gasPrice)) {
+          setter(parseInt(response.data.price) || parseInt(response.data.gasPrice) || "");
+        } else {
+          console.error(`Error: Invalid response data for ${url}`);
+        }
       } catch (error) {
-        console.error(`Error fetching data: ${error.message}`);
+        console.error(`Error fetching data from ${url}: ${error.message}`);
       }
     }
 
     fetchData("http://localhost:3000/api/ethereum-price", setEthPrice);
     fetchData("http://localhost:3000/api/ethGasPrice", setGasPrice);
-
+    
     return () => {};
-  }, []);
+}, []);
+
 
   return (
     <section className="w-full bg-black">
@@ -66,7 +71,7 @@ export default function Header() {
       <section className="flex items-center justify-between h-14 px-4 border-b border-gray-800">
         <Image src={Logo} alt="Etherscan Logo" className="w-36 h-auto" />
 
-        <section className= {styles.menu}>
+        {/* <section className= {styles.menu}>
           <MenuItem label="Home" />
           <MenuItem label="Blockchain" icon />
           <MenuItem label="Token" icon />
@@ -92,7 +97,7 @@ export default function Header() {
             </svg>
             Sign In
           </p>
-        </section>
+        </section> */}
       </section>
     </section>
   );
