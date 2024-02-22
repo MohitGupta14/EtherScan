@@ -11,7 +11,7 @@ import {
   faFileContract,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import Search from './search';
 import Chart from "../public/assets/chart.png";
 
 function formatNumberToMillions(number) {
@@ -25,6 +25,7 @@ export default function HeroSection() {
   // const [showResult, setShowResult] = useState(true);
   const [blockResult, setBlockResult] = useState([]);
   const [transactionsResult, setTransactionsResult] = useState([]);
+
   let latestBlock = "";
   
   useEffect(() => {
@@ -228,7 +229,7 @@ export default function HeroSection() {
                           <section>
                             Fee Recipient{" "}
                              <span className={styles.blueText}>
-                             <section>
+                             <section onClick={() => {navigator.clipboard.writeText(block.txnHash.to)}}>
                               {block.txnHash.to.slice(0, 6)}...
                               </section>
                             </span> 
@@ -264,7 +265,7 @@ export default function HeroSection() {
                             className={styles.tdContract}
                           />
                         </td>
-                        <td className={styles.tdBlock}>
+                        <td className={styles.tdBlock} onClick={() => navigator.clipboard.writeText(txn.hash)}>
                           <section className={styles.blueText}>
                             {txn.hash?.slice(0, 14)}...
                           </section>

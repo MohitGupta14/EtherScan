@@ -6,7 +6,7 @@ import styles from "@/styles/Home.module.css";
 import SearchResults from "./result.js";
 import RootLayout from "./layout.js";
 
-export default function Search({ onSearchClick }) {
+export default function Search({ onSearchClick , address}) {
   const [showResult, setShowResult] = useState(false);
   const [result, setResult] = useState([]);
   const [ERC, setERC] = useState([]);
@@ -21,7 +21,9 @@ export default function Search({ onSearchClick }) {
 
   const handleSearch = async () => {
     document.querySelector("#inputField").value = "";
-
+    if(address !== undefined && address !== ""){
+      setSearchInputValue(address)
+    } 
     try {
       setLoading(true);
       setError(null);
